@@ -1,0 +1,21 @@
+# Exclude sensitive files
+*.credentials.json
+.credentials.json
+
+# Exclude temporary/cache files  
+BACKUP_INFO.txt
+RESTORE_INFO.txt
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Logs
+*.log
