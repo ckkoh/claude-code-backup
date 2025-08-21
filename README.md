@@ -15,6 +15,10 @@ This repository contains a backup of Claude Code settings, hooks, and audio file
 - `projects/` - Chat history (privacy sensitive)
 - Temporary files and caches
 
+## Install libraries needed to run Claude Code /hooks
+1. sudo apt update && sudo apt install jq
+2. sudo apt install ffmpeg -y
+
 ## Quick Restore
 
 ```bash
