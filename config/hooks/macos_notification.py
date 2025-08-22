@@ -4,8 +4,9 @@ import subprocess
 import sys
 import json
 import platform
+from typing import Dict, Any
 
-def send_notification(title, message, sound="default"):
+def send_notification(title: str, message: str, sound: str = "default") -> None:
     """Send a system notification using platform-appropriate tools"""
     system = platform.system().lower()
     
@@ -78,9 +79,8 @@ def send_notification(title, message, sound="default"):
         print(f"Error sending notification: {e}", file=sys.stderr)
         print(f"Notification: {escaped_title} - {escaped_message}", file=sys.stderr)
 
-def main():
-
-    input_data = json.load(sys.stdin)
+def main() -> None:
+    input_data: Dict[str, Any] = json.load(sys.stdin)
     tool_name = input_data.get("tool_name")
     
     # Create notification title and message based on tool name

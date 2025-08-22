@@ -8,9 +8,10 @@ import sys
 import subprocess
 import platform
 from pathlib import Path
+from typing import Union
 
 
-def play_audio(audio_file):
+def play_audio(audio_file: Union[str, Path]) -> None:
     """Play audio file using system audio player"""
     system = platform.system().lower()
     
@@ -52,7 +53,7 @@ def play_audio(audio_file):
         print(f"Error playing audio: {e}")
 
 
-def main():
+def main() -> None:
     """Main function for Claude Code stop hook"""
     print("Stop hook triggered!")
     # Get audio directory

@@ -56,6 +56,15 @@ else
     echo -e "${YELLOW}⚠ audio directory not found${NC}"
 fi
 
+# Backup todo_done.md
+echo "Backing up todo_done.md..."
+if [[ -f "$CLAUDE_DIR/todo_done.md" ]]; then
+    cp "$CLAUDE_DIR/todo_done.md" "$SCRIPT_DIR/config/"
+    echo -e "${GREEN}✓ todo_done.md backed up${NC}"
+else
+    echo -e "${YELLOW}⚠ todo_done.md not found${NC}"
+fi
+
 # Create backup summary
 echo "Creating backup summary..."
 cat > "$SCRIPT_DIR/BACKUP_INFO.txt" << EOF
@@ -77,6 +86,12 @@ EXCLUDED (for security/privacy):
 - local/ (downloaded packages)
 - ide/ (IDE temp files)
 - bash-command-log.txt (command history)
+
+INCLUDED:
+- settings.json (main configuration)
+- hooks/ (custom hook scripts)
+- audio/ (notification sounds)  
+- todo_done.md (task completion log)
 
 To restore: run ./restore.sh on the target system
 EOF
