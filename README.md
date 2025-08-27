@@ -34,6 +34,7 @@ This repository provides a complete backup system for Claude Code settings, incl
 - `settings.json` - Complete Claude Code configuration with hooks, status line, and preferences
 - `hooks/` - Executable hook scripts with type hints and error handling
 - `audio/` - High-quality audio clips for different events
+- `commands/` - Custom slash commands for enhanced productivity
 
 ### Audio Library (11 clips)
 
@@ -55,6 +56,7 @@ This repository provides a complete backup system for Claude Code settings, incl
 - `backup.sh` - Comprehensive backup with safety checks
 - `restore.sh` - Intelligent restore with conflict resolution
 - Detailed logging and error handling throughout
+- Custom slash commands backup and restoration
 
 ## 🛡️ Security & Privacy
 
@@ -382,11 +384,14 @@ Feel free to submit issues and enhancement requests! This backup system is desig
 │   ├── pacman_start.mp3     # Themed audio collection
 │   ├── pacman_death.mp3
 │   └── pacman_eatghost.mp3
+├── commands/                 # Custom slash commands
+│   └── *.md                 # User-scoped slash command files
 └── bash-command-log.txt      # Command audit trail
 ```
 
 ## 📈 Recent Updates
 
+- ✅ **Custom Slash Commands Backup** - Added support for backing up user-scoped custom slash commands from `~/.claude/commands/`
 - ✅ **Enhanced Status Line** - Added Debian chroot detection and Sonnet 4 model identifier with orange color coding
 - ✅ **New Audio File** - Added `readtr.mp3` for Stop hook ready-to-receive state
 - ✅ **Audio Library Expansion** - Now includes 11 audio clips with comprehensive event coverage

@@ -27,7 +27,8 @@ fi
 # Create backup directories
 echo "Creating backup directories..."
 mkdir -p "$SCRIPT_DIR/config/hooks"
-mkdir -p "$SCRIPT_DIR/config/audio" 
+mkdir -p "$SCRIPT_DIR/config/audio"
+mkdir -p "$SCRIPT_DIR/config/commands" 
 
 # Backup settings.json
 echo "Backing up settings.json..."
@@ -54,6 +55,15 @@ if [[ -d "$CLAUDE_DIR/audio" ]]; then
     echo -e "${GREEN}✓ audio files backed up${NC}"
 else
     echo -e "${YELLOW}⚠ audio directory not found${NC}"
+fi
+
+# Backup custom slash commands
+echo "Backing up custom slash commands..."
+if [[ -d "$CLAUDE_DIR/commands" ]]; then
+    cp -r "$CLAUDE_DIR/commands/"* "$SCRIPT_DIR/config/commands/" 2>/dev/null || true
+    echo -e "${GREEN}✓ custom slash commands backed up${NC}"
+else
+    echo -e "${YELLOW}⚠ commands directory not found${NC}"
 fi
 
 # Backup todo_done.md
@@ -90,7 +100,8 @@ EXCLUDED (for security/privacy):
 INCLUDED:
 - settings.json (main configuration)
 - hooks/ (custom hook scripts)
-- audio/ (notification sounds)  
+- audio/ (notification sounds)
+- commands/ (custom slash commands)
 - todo_done.md (task completion log)
 
 To restore: run ./restore.sh on the target system
