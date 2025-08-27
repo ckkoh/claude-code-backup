@@ -49,8 +49,10 @@ fi
 echo "Restoring hooks..."
 if [[ -d "$SCRIPT_DIR/config/hooks" ]] && [[ "$(ls -A $SCRIPT_DIR/config/hooks 2>/dev/null)" ]]; then
     mkdir -p "$CLAUDE_DIR/hooks"
-    cp -r "$SCRIPT_DIR/config/hooks/"* "$CLAUDE_DIR/hooks/"
-    chmod +x "$CLAUDE_DIR/hooks/"* 2>/dev/null || true  # Make executable if needed
+    # Copy hooks excluding Python cache directories
+    find "$SCRIPT_DIR/config/hooks" -type f ! -path "*/__pycache__/*" -exec cp {} "$CLAUDE_DIR/hooks/" \;
+    # Make hook files executable (but not .pyc files)
+    find "$CLAUDE_DIR/hooks" -type f \( -name "PreToolUse" -o -name "PostToolUse" -o -name "*.py" \) -exec chmod +x {} \;
     echo -e "${GREEN}✓ hooks restored${NC}"
 else
     echo -e "${YELLOW}⚠ hooks not found in backup${NC}"
@@ -66,6 +68,18 @@ else
     echo -e "${YELLOW}⚠ audio files not found in backup${NC}"
 fi
 
+# Restore custom commands
+echo "Restoring custom commands..."
+if [[ -d "$SCRIPT_DIR/config/commands" ]] && [[ "$(ls -A $SCRIPT_DIR/config/commands 2>/dev/null)" ]]; then
+    mkdir -p "$CLAUDE_DIR/commands"
+    cp -r "$SCRIPT_DIR/config/commands/"* "$CLAUDE_DIR/commands/"
+    # Only make executable files that need to be executable (not .md files)
+    find "$CLAUDE_DIR/commands" -type f ! -name "*.md" -exec chmod +x {} \; 2>/dev/null || true
+    echo -e "${GREEN}✓ custom commands restored${NC}"
+else
+    echo -e "${YELLOW}⚠ custom commands not found in backup${NC}"
+fi
+
 # Create restore summary
 echo "Creating restore summary..."
 cat > "$CLAUDE_DIR/RESTORE_INFO.txt" << EOF
@@ -76,7 +90,7 @@ Source Backup: $SCRIPT_DIR/config
 Target Directory: $CLAUDE_DIR
 
 Files Restored:
-$(find "$CLAUDE_DIR" -type f -name "*.json" -o -name "*.py" -o -name "*.mp3" -o -name "PreToolUse" -o -name "PostToolUse" | grep -v RESTORE_INFO.txt | sort)
+$(find "$CLAUDE_DIR" -type f ! -path "*/__pycache__/*" ! -name "RESTORE_INFO.txt" | sort)
 
 MANUAL SETUP STILL REQUIRED:
 1. Authentication: Run 'claude auth login' to set up API credentials
