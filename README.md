@@ -9,17 +9,20 @@ This repository provides a complete backup system for Claude Code settings, incl
 ## 🚀 Features
 
 ### Automated Backup & Restore
+
 - **Smart backup script** (`backup.sh`) - Safely backs up configurations with detailed logging
 - **One-command restore** (`restore.sh`) - Restores configurations with conflict handling
 - **Backup validation** - Automatically generates detailed backup summaries
 
 ### Advanced Hook System
+
 - **Session Management** - Custom SessionStart hooks with Pac-Man themed audio
 - **Tool Monitoring** - PreToolUse hooks for command logging and tracking
 - **Real-time Notifications** - Cross-platform desktop notifications for tool usage
 - **Audio Feedback** - Rich audio library with task completion sounds
 
 ### Cross-Platform Support
+
 - **Linux** - Full support with multiple audio players and notification systems
 - **macOS** - Native AppleScript notifications and afplay audio
 - **Windows** - PowerShell notifications and Windows Media Player integration
@@ -27,11 +30,13 @@ This repository provides a complete backup system for Claude Code settings, incl
 ## 📦 What's Included
 
 ### Configuration Files
+
 - `settings.json` - Complete Claude Code configuration with hooks, status line, and preferences
 - `hooks/` - Executable hook scripts with type hints and error handling
 - `audio/` - High-quality audio clips for different events
 
 ### Audio Library (11 clips)
+
 - `alert.mp3` - General notifications
 - `awaiting_instructions.mp3` - Waiting for user input
 - `build_complete.mp3` - Build/compilation completion
@@ -46,6 +51,7 @@ This repository provides a complete backup system for Claude Code settings, incl
   - `pacman_eatghost.mp3` - Success/achievement sounds
 
 ### Automation Scripts
+
 - `backup.sh` - Comprehensive backup with safety checks
 - `restore.sh` - Intelligent restore with conflict resolution
 - Detailed logging and error handling throughout
@@ -53,6 +59,7 @@ This repository provides a complete backup system for Claude Code settings, incl
 ## 🛡️ Security & Privacy
 
 ### Excluded Files (for security)
+
 - `.credentials.json` - API keys and authentication tokens
 - `projects/` - Chat history and conversation data
 - `todos/` - Temporary todo files
@@ -63,6 +70,7 @@ This repository provides a complete backup system for Claude Code settings, incl
 - `bash-command-log.txt` - Command execution logs
 
 ### Security Best Practices
+
 - No sensitive data in version control
 - Executable permissions preserved during restore
 - Backup validation before overwriting existing configurations
@@ -71,10 +79,14 @@ This repository provides a complete backup system for Claude Code settings, incl
 ## 🔧 Prerequisites
 
 ### Required Dependencies
+
 ```bash
 # Ubuntu/Debian
 sudo apt update
 sudo apt install jq ffmpeg -y
+sudo apt install mypy # Optional static type checker for Python
+sudo apt install flake8 # Tool For Style Guide Enforcement
+sudo apt install pylint # Static code analyser
 
 # macOS
 brew install jq ffmpeg
@@ -87,6 +99,7 @@ sudo pacman -S jq ffmpeg
 ```
 
 ### Optional Dependencies (auto-detected)
+
 - **Linux Audio**: paplay, aplay, mpg123, ffplay
 - **Linux Notifications**: notify-send, zenity
 - **Python**: Required for hook scripts (usually pre-installed)
@@ -94,6 +107,7 @@ sudo pacman -S jq ffmpeg
 ## ⚡ Quick Start
 
 ### Clone and Restore
+
 ```bash
 # Clone this repository
 git clone <your-repo-url> claude-code-backup
@@ -110,6 +124,7 @@ claude auth login
 ```
 
 ### Verify Installation
+
 ```bash
 # Test audio system
 python3 ~/.claude/hooks/play_audio.py alert
@@ -126,74 +141,95 @@ ls -la ~/.claude/hooks/
 ### Hook System Architecture
 
 #### SessionStart Hook
+
 Triggers when Claude Code session begins:
+
 ```json
 {
-  "SessionStart": [{
-    "matcher": "",
-    "hooks": [{
-      "type": "command",
-      "command": "uv run ~/.claude/hooks/play_audio.py pacman_start"
-    }]
-  }]
+  "SessionStart": [
+    {
+      "matcher": "",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "uv run ~/.claude/hooks/play_audio.py pacman_start"
+        }
+      ]
+    }
+  ]
 }
 ```
 
 #### PreToolUse Hook
+
 Logs Bash commands for audit trail:
+
 ```json
 {
-  "PreToolUse": [{
-    "matcher": "Bash",
-    "hooks": [{
-      "type": "command", 
-      "command": "jq -r '\"\\(.tool_input.command) - \\(.tool_input.description // \"No description\")\"' >> ~/.claude/bash-command-log.txt"
-    }]
-  }]
+  "PreToolUse": [
+    {
+      "matcher": "Bash",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "jq -r '\"\\(.tool_input.command) - \\(.tool_input.description // \"No description\")\"' >> ~/.claude/bash-command-log.txt"
+        }
+      ]
+    }
+  ]
 }
 ```
 
 #### Notification System
+
 Provides real-time feedback for all tool usage:
+
 ```json
 {
-  "Notification": [{
-    "matcher": "",
-    "hooks": [
-      {
-        "type": "command",
-        "command": "uv run ~/.claude/hooks/play_audio.py alert"
-      },
-      {
-        "type": "command", 
-        "command": "uv run ~/.claude/hooks/macos_notification.py"
-      }
-    ]
-  }]
+  "Notification": [
+    {
+      "matcher": "",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "uv run ~/.claude/hooks/play_audio.py alert"
+        },
+        {
+          "type": "command",
+          "command": "uv run ~/.claude/hooks/macos_notification.py"
+        }
+      ]
+    }
+  ]
 }
 ```
 
 #### Stop Hook System
+
 Triggers when Claude Code session ends or pauses, signaling ready-to-receive state:
+
 ```json
 {
-  "Stop": [{
-    "matcher": "",
-    "hooks": [
-      {
-        "type": "command",
-        "command": "uv run ~/.claude/hooks/play_audio.py readtr"
-      },
-      {
-        "type": "command",
-        "command": "uv run ~/.claude/hooks/macos_notification.py"
-      }
-    ]
-  }]
+  "Stop": [
+    {
+      "matcher": "",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "uv run ~/.claude/hooks/play_audio.py readtr"
+        },
+        {
+          "type": "command",
+          "command": "uv run ~/.claude/hooks/macos_notification.py"
+        }
+      ]
+    }
+  ]
 }
 ```
 
 ### Status Line Configuration
+
 Claude Code's status line feature displays information at the bottom of the terminal interface. This enhanced configuration shows the current user, hostname, working directory, and AI model information with advanced shell environment detection:
 
 ```bash
@@ -201,11 +237,12 @@ debian_chroot=$([ -r /etc/debian_chroot ] && cat /etc/debian_chroot); printf '%s
 ```
 
 **Status Line Breakdown:**
+
 - `debian_chroot=$(...` - Detects if running in a Debian chroot environment
 - `${debian_chroot:+($debian_chroot)}` - Shows `(chroot_name)` if in chroot, empty otherwise
 - `\033[01;32m` - Bold green color for username and hostname
 - `%s@%s` - Format: `username@hostname`
-- `\033[00m` - Reset color formatting  
+- `\033[00m` - Reset color formatting
 - `:` - Separator between host and directory
 - `\033[01;34m` - Bold blue color for current directory path
 - `%s` - Current working directory from `$(pwd)`
@@ -214,6 +251,7 @@ debian_chroot=$([ -r /etc/debian_chroot ] && cat /etc/debian_chroot); printf '%s
 - `\033[00m` - Reset color at the end
 
 **Example Outputs:**
+
 ```bash
 # Normal environment
 claude@dev-machine:/home/claude/projects Sonnet 4
@@ -227,18 +265,22 @@ This enhanced status line provides comprehensive context about your environment,
 ## 🔄 Backup Management
 
 ### Creating Backups
+
 ```bash
 ./backup.sh
 ```
+
 - Safely backs up all configurations
 - Creates detailed backup summary (`BACKUP_INFO.txt`)
 - Preserves file permissions and structure
 - Validates backup completion
 
 ### Restoring Configurations
+
 ```bash
 ./restore.sh
 ```
+
 - Creates backups of existing configurations
 - Restores all backed-up files and settings
 - Sets proper permissions on hook scripts
@@ -247,11 +289,13 @@ This enhanced status line provides comprehensive context about your environment,
 ## 🎵 Audio System Details
 
 ### Supported Audio Players
+
 - **Linux**: paplay (PulseAudio), aplay (ALSA), mpg123, ffplay
 - **macOS**: afplay (native)
 - **Windows**: PowerShell Media.SoundPlayer
 
 ### Audio Usage Examples
+
 ```bash
 # Play specific sounds
 python3 ~/.claude/hooks/play_audio.py alert
@@ -271,6 +315,7 @@ done
 ### Common Issues
 
 #### Audio Not Playing
+
 ```bash
 # Check audio players
 which paplay aplay mpg123 ffplay
@@ -283,6 +328,7 @@ ls -la ~/.claude/audio/
 ```
 
 #### Notifications Not Working
+
 ```bash
 # Check notification systems
 which notify-send zenity
@@ -292,6 +338,7 @@ notify-send "Test" "Claude Code notification test"
 ```
 
 #### Hook Scripts Not Executing
+
 ```bash
 # Verify permissions
 ls -la ~/.claude/hooks/
@@ -304,6 +351,7 @@ python3 ~/.claude/hooks/play_audio.py alert
 ```
 
 ### Log Files
+
 - `~/.claude/bash-command-log.txt` - Command execution history
 - `~/.claude/RESTORE_INFO.txt` - Last restore operation details
 - `BACKUP_INFO.txt` - Last backup operation summary
